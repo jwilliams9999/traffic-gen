@@ -1,0 +1,50 @@
+
+import urllib2 , socket, httplib, zipfile, ssl #time
+socket.setdefaulttimeout(5)
+
+url="http://s3.amazonaws.com/alexa-static/top-1m.csv.zip"
+
+f = urllib2.urlopen(url)
+with open("top-1m.csv.zip", "wb") as code:
+	code.write(f.read())
+
+zip = zipfile.ZipFile(r'top-1m.csv.zip')
+zip.extractall(r'./')
+
+
+f_name="top-1m.csv"
+
+def geturl(obj):
+
+	userinput = int(input("How many urls do you want to run through: "))
+	with open(obj,"r") as urlfile:
+
+			for aline in urlfile:
+				
+				if userinput == 0:
+					return 
+				try:
+					userinput -= 1
+					column2 = aline.split(",",1)[1]
+					url="http://" + column2
+					user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
+					headers = {'User-Agent': user_agent}
+					#req = urllib2.Request(url, "", headers)
+					req = urllib2.Request(url)
+					f = urllib2.urlopen(req)
+				    	print("HTTP {},{}".format(f.getcode(),url))
+				    
+
+				except (urllib2.HTTPError, urllib2.URLError, socket.error, ssl.CertificateError, httplib.BadStatusLine) as err:
+					    print ("Err,{},{}".format(err, url))
+
+				continue
+
+			
+
+			return
+
+geturl(f_name)
+
+
+
